@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allen.rbac.dao.SysUserRoleDao">
+    <resultMap id="BaseResultMap" type="com.allen.rbac.entity.SysUserRole">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="role_id" property="roleId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="BaseColumnList" >
+        id, user_id, role_id, create_time, update_time
+    </sql>
+
+    <insert id="insertBatch" >
+        INSERT INTO sys_user_role (user_id, role_id, create_time, update_time)
+        VALUES
+        <foreach collection="sysUserRoleList" item="sysUserRole" separator=",">
+            (#{sysUserRole.userId}, #{sysUserRole.roleId}, now(), now())
+        </foreach>
+    </insert>
+
+    <select id="findByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumnList" />
+        FROM sys_user_role
+        WHERE user_id = #{usreId}
+    </select>
+
+    <delete id="deleteBatch">
+        <if test="idList != null and idList.size() > 0">
+            delete from sys_user_role where id in
+            <foreach collection="idList" open="(" item="id" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </delete>
+
+</mapper>

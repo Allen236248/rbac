@@ -68,7 +68,7 @@ public class SysRolePrivilegeServiceImpl implements SysRolePrivilegeService {
             sysRolePrivilegeDto.setUpdateTime(new Date());
             sysRolePrivilegeDtoList.add(sysRolePrivilegeDto);
         }
-        sysRolePrivilegeDao.saveBatch(BeanUtils.copyProperties(sysRolePrivilegeDtoList, SysRolePrivilege.class));
+        sysRolePrivilegeDao.insertBatch(BeanUtils.copyProperties(sysRolePrivilegeDtoList, SysRolePrivilege.class));
         return sysRolePrivilegeDtoList;
     }
 

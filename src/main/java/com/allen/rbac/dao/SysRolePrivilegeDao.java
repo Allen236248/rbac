@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface SysRolePrivilegeDao {
 
-    int saveBatch(List<SysRolePrivilege> sysRolePrivilegeList);
+    int insertBatch(List<SysRolePrivilege> sysRolePrivilegeList);
 
     void deleteBatch(List<Long> idList);
 

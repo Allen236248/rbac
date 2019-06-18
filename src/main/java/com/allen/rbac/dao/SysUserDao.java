@@ -22,7 +22,7 @@ public interface SysUserDao {
 
     List<SysUser> findByParams(Map<String, Object> params);
 
-    int deleteById(@Param("id") Long id);
+    int updateStatus(@Param("id") Long id, @Param("status") Integer status);
 
     int update(SysUser sysUser);
 

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allen.rbac.dao.SysPrivilegeDao">
+    <resultMap id="BaseResultMap" type="com.allen.rbac.entity.SysPrivilege">
+        <id column="id" property="id" />
+        <result column="pid" property="pid" />
+        <result column="platform" property="platform" />
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+        <result column="type" property="type" />
+        <result column="sort" property="sort" />
+        <result column="url" property="url" />
+        <result column="status" property="status" />
+        <result column="remark" property="remark" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="BaseColumnList" >
+        id, pid, platform, name, code, type, sort, url, status, remark, create_time, update_time
+    </sql>
+
+    <insert id="insert" parameterType="com.allen.rbac.entity.SysPrivilege" useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO sys_privilege (pid, platform, name, code, type, sort, url, status, remark, create_time, update_time)
+        VALUES (#{pid}, #{platform}, #{name}, #{code}, #{type}, #{sort}, #{url}, #{status}, #{remark}, now(), now())
+    </insert>
+
+    <select id="findById" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumnList" />
+        FROM sys_privilege
+        WHERE id = #{id} and status = 1
+    </select>
+
+    <select id="findByPid" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumnList" />
+        FROM sys_privilege
+        WHERE pid = #{pid} and status = 1
+    </select>
+
+    <select id="findByName" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumnList" />
+        FROM sys_privilege
+        WHERE name = #{name} and status = 1
+    </select>
+
+    <select id="findByIdList" resultMap="BaseResultMap">
+        <if test="null != idList and idList.size() > 0">
+        SELECT <include refid="BaseColumnList" />
+        FROM sys_privilege
+        WHERE status = 1 and id in
+            <foreach collection="idList" open="(" item="id" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumnList" />
+        FROM sys_privilege
+        where status = 1
+    </select>
+
+    <update id="updateStatus" >
+        UPDATE sys_privilege SET status = #{status}, update_time = now() WHERE id = #{id} and status = 1
+    </update>
+
+    <update id="update" parameterType="com.allen.rbac.entity.SysPrivilege" >
+        UPDATE sys_privilege
+        SET
+          name = #{name},
+          type = #{type},
+          sort = #{sort},
+          url = #{url},
+          code = #{code},
+          remark = #{remark},
+          update_time = now()
+        WHERE id = #{id} and status = 1
+    </update>
+
+</mapper>

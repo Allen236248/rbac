@@ -103,14 +103,6 @@ public class SysPrivilegeServiceImpl implements SysPrivilegeService {
     }
 
     @Override
-    public SysPrivilegeDto findByCode(String code) {
-        ServiceAssert.assertThat(!StringUtils.hasText(code), "权限码不能为空");
-
-        SysPrivilege sysPrivilege = sysPrivilegeDao.findByCode(code);
-        return BeanUtils.copyProperties(sysPrivilege, SysPrivilegeDto.class);
-    }
-
-    @Override
     public List<SysPrivilegeDto> findByIdList(List<Long> idList) {
         if(CollectionUtils.isEmpty(idList)) {
             return Collections.emptyList();
@@ -129,7 +121,7 @@ public class SysPrivilegeServiceImpl implements SysPrivilegeService {
         List<SysRolePrivilegeDto> sysRolePrivilegeDtoList = sysRolePrivilegeService.findByPrivilegeId(id);
         ServiceAssert.assertThat(!CollectionUtils.isEmpty(sysRolePrivilegeDtoList), "当前节点关联角色，不能删除");
 
-        sysPrivilegeDao.disableSysPrivilege(id, PrivilegeStatus.DISABLE.getId());
+        sysPrivilegeDao.updateStatus(id, PrivilegeStatus.DISABLE.getId());
     }
 
     @Override
@@ -165,6 +157,7 @@ public class SysPrivilegeServiceImpl implements SysPrivilegeService {
                     ServiceAssert.assertThat(dto.getSort().intValue() == sort.intValue(), "相同父节点下已存在排序为" + sort + "的节点");
                 }
             }
+            exist.setSort(sort);
         }
         if(StringUtils.hasText(url) && !url.equals(exist.getUrl())) {
             exist.setUrl(url.trim());

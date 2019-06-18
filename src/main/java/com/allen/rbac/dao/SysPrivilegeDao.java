@@ -19,11 +19,9 @@ public interface SysPrivilegeDao {
 
     SysPrivilege findByName(@Param("name") String name);
 
-    SysPrivilege findByCode(@Param("code") String code);
-
     List<SysPrivilege> findByIdList(@Param("idList") List<Long> idList);
 
-    int disableSysPrivilege(@Param("id") Long id, @Param("status") Integer status);
+    int updateStatus(@Param("id") Long id, @Param("status") Integer status);
 
     int update(SysPrivilege sysPrivilege);
 

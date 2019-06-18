@@ -14,8 +14,6 @@ public interface SysPrivilegeService {
 
     SysPrivilegeDto findByName(String name);
 
-    SysPrivilegeDto findByCode(String code);
-
     List<SysPrivilegeDto> findByIdList(List<Long> idList);
 
     void disableSysPrivilege(Long id);

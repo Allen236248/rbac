@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allen.rbac.dao.SysRolePrivilegeDao">
+    <resultMap id="BaseResultMap" type="com.allen.rbac.entity.SysRolePrivilege">
+        <id column="id" property="id" />
+        <result column="role_id" property="roleId" />
+        <result column="privilege_id" property="privilegeId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <sql id="BaseColumnList" >
+        id, role_id, privilege_id, create_time, update_time
+    </sql>
+
+    <insert id="insertBatch" >
+        INSERT INTO sys_role_privilege (role_id, privilege_id, create_time, update_time)
+        VALUES
+        <foreach collection="sysRolePrivilegeList" item="sysRolePrivilege" separator=",">
+            (#{sysRolePrivilege.roleId}, #{sysRolePrivilege.privilegeId}, now(), now())
+        </foreach>
+    </insert>
+
+    <select id="findByRoleId" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumnList" />
+        FROM sys_role_privilege
+        WHERE role_id = #{roleId}
+    </select>
+
+    <select id="findByPrivilegeId" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumnList" />
+        FROM sys_role_privilege
+        WHERE privilege_id = #{privilegeId}
+    </select>
+
+    <delete id="deleteBatch">
+        <if test="idList != null and idList.size() > 0">
+            delete from sys_role_privilege where id in
+            <foreach collection="idList" open="(" item="id" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </delete>
+
+</mapper>

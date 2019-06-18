@@ -95,7 +95,7 @@ public class SysUserServiceImpl implements SysUserService {
     public void deleteById(Long id) {
         ServiceAssert.assertThat(null == id && id.longValue() < 1, "用户ID不能为空或小于1");
 
-        sysUserDao.deleteById(id);
+        sysUserDao.updateStatus(id, 3);
     }
 
     @Transactional
