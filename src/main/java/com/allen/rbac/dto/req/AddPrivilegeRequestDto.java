@@ -25,11 +25,6 @@ public class AddPrivilegeRequestDto extends BaseDto {
     private String name;
 
     /**
-     * 权限码
-     */
-    private String code;
-
-    /**
      * 权限类别
      * MENU：菜单
      * OPERATION：操作（查看/增加/删除/修改）
@@ -45,13 +40,6 @@ public class AddPrivilegeRequestDto extends BaseDto {
      * 请求的URL地址
      */
     private String url;
-
-    /**
-     * 权限状态
-     * 0：禁用
-     * 1：启用
-     */
-    private Integer status;
 
     /**
      * 备注
@@ -82,14 +70,6 @@ public class AddPrivilegeRequestDto extends BaseDto {
         this.name = name;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public String getType() {
         return type;
     }
@@ -112,14 +92,6 @@ public class AddPrivilegeRequestDto extends BaseDto {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
     }
 
     public String getRemark() {

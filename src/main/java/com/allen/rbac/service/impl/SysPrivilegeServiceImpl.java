@@ -33,7 +33,6 @@ public class SysPrivilegeServiceImpl implements SysPrivilegeService {
         Long pid = sysPrivilegeDto.getPid();
         Integer platform = sysPrivilegeDto.getPlatform();
         String name = sysPrivilegeDto.getName();
-        String code = sysPrivilegeDto.getCode();
         String type = sysPrivilegeDto.getType();
         Integer sort = sysPrivilegeDto.getSort();
         String url = sysPrivilegeDto.getUrl();
@@ -42,7 +41,6 @@ public class SysPrivilegeServiceImpl implements SysPrivilegeService {
         ServiceAssert.assertThat(null == pid, "请选择父节点");
         ServiceAssert.assertThat(null == PrivilegePlatform.get(platform), "无效权限平台");
         ServiceAssert.assertThat(!StringUtils.hasText(name), "权限名称不能为空");
-        ServiceAssert.assertThat(!StringUtils.hasText(code), "权限码不能为空");
         ServiceAssert.assertThat(null == PrivilegeType.get(type), "无效权限类别");
         ServiceAssert.assertThat(!StringUtils.hasText(url), "请求的URL地址不能为空");
         //顶级菜单添加子菜单不做此校验
@@ -50,8 +48,6 @@ public class SysPrivilegeServiceImpl implements SysPrivilegeService {
         //去除左右空格
         name = name.trim();
         ServiceAssert.assertThat(null != findByName(name), "权限名称已存在");
-        code = code.trim();
-        ServiceAssert.assertThat(null != findByCode(code), "权限码已存在");
 
         List<SysPrivilegeDto> sysPrivilegeDtoList = findByPid(pid);
         if(!CollectionUtils.isEmpty(sysPrivilegeDtoList)) {
@@ -61,12 +57,25 @@ public class SysPrivilegeServiceImpl implements SysPrivilegeService {
         }
 
         sysPrivilegeDto.setName(name);
-        sysPrivilegeDto.setCode(code);
+        url = url.trim();
+        sysPrivilegeDto.setUrl(url);
+        //自动生成code
+        sysPrivilegeDto.setCode(buildPrivilegeCode(platform, url));
         sysPrivilegeDto.setStatus(PrivilegeStatus.ENABLE.getId());
         sysPrivilegeDto.setRemark(remark.trim());
 
         sysPrivilegeDao.insert(BeanUtils.copyProperties(sysPrivilegeDto, SysPrivilege.class));
         return sysPrivilegeDto;
+    }
+
+    private String buildPrivilegeCode(Integer platform, String url) {
+        StringBuilder codeBuilder = new StringBuilder();
+        codeBuilder.append(PrivilegePlatform.get(platform));
+        codeBuilder.append("-");
+        codeBuilder.append(url.substring(url.lastIndexOf("/") + 1));
+        codeBuilder.append("-");
+        codeBuilder.append(System.currentTimeMillis());
+        return codeBuilder.toString();
     }
 
     @Override
@@ -159,6 +168,7 @@ public class SysPrivilegeServiceImpl implements SysPrivilegeService {
         }
         if(StringUtils.hasText(url) && !url.equals(exist.getUrl())) {
             exist.setUrl(url.trim());
+            exist.setCode(buildPrivilegeCode(exist.getPlatform(), exist.getUrl()));
         }
         if(StringUtils.hasText(remark) && !remark.equals(exist.getRemark())) {
             exist.setRemark(remark.trim());

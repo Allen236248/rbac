@@ -1,25 +1,20 @@
 package com.allen.rbac.controller;
 
 import com.allen.rbac.dto.SysPrivilegeDto;
-import com.allen.rbac.dto.SysUserDto;
-import com.allen.rbac.dto.req.*;
+import com.allen.rbac.dto.req.AddPrivilegeRequestDto;
+import com.allen.rbac.dto.req.UpdatePrivilegeRequestDto;
 import com.allen.rbac.service.SysPrivilegeService;
 import com.allen.rbac.util.ApiResult;
-import com.allen.rbac.util.PageInfo;
-import com.allen.rbac.util.PageResult;
 import com.allen.rbac.util.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("sys_privilege")
 public class SysPrivilegeController extends BaseController {
 
@@ -36,7 +31,6 @@ public class SysPrivilegeController extends BaseController {
             sysPrivilegeDto.setPid(addPrivilegeRequestDto.getPid());
             sysPrivilegeDto.setPlatform(addPrivilegeRequestDto.getPlatform());
             sysPrivilegeDto.setName(addPrivilegeRequestDto.getName());
-            sysPrivilegeDto.setCode(addPrivilegeRequestDto.getCode());
             sysPrivilegeDto.setType(addPrivilegeRequestDto.getType());
             sysPrivilegeDto.setUrl(addPrivilegeRequestDto.getUrl());
             sysPrivilegeDto.setSort(addPrivilegeRequestDto.getSort());
