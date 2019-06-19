@@ -7,6 +7,8 @@ import com.allen.rbac.dto.BaseDto;
  */
 public class UpdatePrivilegeRequestDto extends BaseDto {
 
+    private Long id;
+
     /**
      * 权限名称
      */
@@ -34,6 +36,13 @@ public class UpdatePrivilegeRequestDto extends BaseDto {
      */
     private String remark;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

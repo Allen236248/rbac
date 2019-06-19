@@ -40,17 +40,15 @@ public class SysPrivilegeControllerTest {
     }
 
     /**
-     * 返回ModelAndView
-     *
      * @throws Exception
      */
     @Test
     public void testAddSysPrivilege() throws Exception {
-        String data = env.getProperty("testAddSysPrivilegeData1");
+        String data = env.getProperty("testAddSysPrivilegeData3");
         System.out.println(data);
         JSONArray array = JSON.parseArray(data);
         List<String> cntList = array.toJavaList(String.class);
-        for(String cnt : cntList) {
+        for (String cnt : cntList) {
             System.out.println("cnt=" + cnt);
             mockMvc.perform(MockMvcRequestBuilders.post("/sys_privilege/add")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -61,34 +59,45 @@ public class SysPrivilegeControllerTest {
         }
     }
 
-    /**
-     * 返回EnvConfig对象
-     *
-     * @throws Exception
-     */
     @Test
-    public void getEnvConfigWithDomain() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/env_conf_domain")
+    public void testListSysPrivilege() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/sys_privilege/list")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.envName").value("dev"))
                 .andDo(MockMvcResultHandlers.print());
     }
 
-    /**
-     * 返回EnvConfig对象
-     *
-     * @throws Exception
-     */
     @Test
-    public void addLearnResource() throws Exception {
-        String json = "{\"author\":\"MockMvc测试\", \"name\":\"MockMvc测试\", \"url\":\"http://www.baidu.com/\"}";
-        mockMvc.perform(MockMvcRequestBuilders.post("/learn/add")
-                .contentType(MediaType.APPLICATION_JSON_UTF8) // 表示客户端发送的数据格式
-                .accept(MediaType.APPLICATION_JSON_UTF8) // 表示客户端接受的数据格式
-                .content(json.getBytes()))
+    public void testGetSysPrivilege() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/sys_privilege/get")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .param("id", "48"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
+
+    @Test
+    public void testDelSysPrivilege() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/sys_privilege/del")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .param("id", "48"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void testUpdateSysPrivilege() throws Exception {
+        String data = env.getProperty("testUpdateSysPrivilege");
+        mockMvc.perform(MockMvcRequestBuilders.post("/sys_privilege/update")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .content(data))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                //.andExpect(MockMvcResultMatchers.jsonPath("$.envName").value("dev"))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
 }

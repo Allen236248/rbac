@@ -11,6 +11,8 @@ import com.allen.rbac.service.SysPrivilegeService;
 import com.allen.rbac.service.SysRolePrivilegeService;
 import com.allen.rbac.util.BeanUtils;
 import com.allen.rbac.util.ServiceAssert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -21,6 +23,8 @@ import java.util.List;
 
 @Service
 public class SysPrivilegeServiceImpl implements SysPrivilegeService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SysPrivilegeServiceImpl.class);
 
     @Autowired
     private SysPrivilegeDao sysPrivilegeDao;
@@ -47,7 +51,8 @@ public class SysPrivilegeServiceImpl implements SysPrivilegeService {
         ServiceAssert.assertThat(pid.longValue() != 0 && null == findById(pid), "父节点不存在");
         //去除左右空格
         name = name.trim();
-        ServiceAssert.assertThat(null != findByName(name), "权限名称已存在");
+        SysPrivilegeDto existOfName = findByName(name);
+        ServiceAssert.assertThat(null != existOfName && existOfName.getPlatform().intValue() == platform.intValue(), "权限名称在当前平台下已存在");
 
         List<SysPrivilegeDto> sysPrivilegeDtoList = findByPid(pid);
         if(!CollectionUtils.isEmpty(sysPrivilegeDtoList)) {
@@ -64,7 +69,9 @@ public class SysPrivilegeServiceImpl implements SysPrivilegeService {
         sysPrivilegeDto.setStatus(PrivilegeStatus.ENABLE.getId());
         sysPrivilegeDto.setRemark(remark.trim());
 
-        sysPrivilegeDao.insert(BeanUtils.copyProperties(sysPrivilegeDto, SysPrivilege.class));
+        SysPrivilege sysPrivilege = BeanUtils.copyProperties(sysPrivilegeDto, SysPrivilege.class);
+        sysPrivilegeDao.insert(sysPrivilege);
+        BeanUtils.copyProperties(sysPrivilege, sysPrivilegeDto);
         return sysPrivilegeDto;
     }
 
@@ -168,6 +175,8 @@ public class SysPrivilegeServiceImpl implements SysPrivilegeService {
         }
 
         sysPrivilegeDao.update(BeanUtils.copyProperties(exist, SysPrivilege.class));
+
+        BeanUtils.copyProperties(exist, sysPrivilegeDto);
         return sysPrivilegeDto;
     }
 

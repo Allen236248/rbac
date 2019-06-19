@@ -100,6 +100,7 @@ public class SysPrivilegeController extends BaseController {
         ApiResult<SysPrivilegeDto> apiResult = ApiResult.build();
         try {
             SysPrivilegeDto sysPrivilegeDto = new SysPrivilegeDto();
+            sysPrivilegeDto.setId(updatePrivilegeRequestDto.getId());
             sysPrivilegeDto.setName(updatePrivilegeRequestDto.getName());
             sysPrivilegeDto.setType(updatePrivilegeRequestDto.getType());
             sysPrivilegeDto.setUrl(updatePrivilegeRequestDto.getUrl());
