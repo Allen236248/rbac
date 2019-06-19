@@ -21,7 +21,7 @@ public class SysRoleDto extends BaseDto {
      */
     private Integer status;
 
-    private List<SysPrivilegeDto> sysPrivilegeDtoList;
+    private List<SysPrivilegeDto> privilegeList;
 
     private List<Long> privilegeIdList;
 
@@ -49,12 +49,12 @@ public class SysRoleDto extends BaseDto {
         this.status = status;
     }
 
-    public List<SysPrivilegeDto> getSysPrivilegeDtoList() {
-        return sysPrivilegeDtoList;
+    public List<SysPrivilegeDto> getPrivilegeList() {
+        return privilegeList;
     }
 
-    public void setSysPrivilegeDtoList(List<SysPrivilegeDto> sysPrivilegeDtoList) {
-        this.sysPrivilegeDtoList = sysPrivilegeDtoList;
+    public void setPrivilegeList(List<SysPrivilegeDto> privilegeList) {
+        this.privilegeList = privilegeList;
     }
 
     public List<Long> getPrivilegeIdList() {

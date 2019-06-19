@@ -17,4 +17,6 @@ public interface SysUserRoleDao {
 
     List<SysUserRole> findByUserId(@Param("userId") Long userId);
 
+    List<SysUserRole> findByRoleId(@Param("roleId") Long roleId);
+
 }

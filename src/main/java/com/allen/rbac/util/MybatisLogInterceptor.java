@@ -35,9 +35,9 @@ public class MybatisLogInterceptor implements Interceptor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MybatisLogInterceptor.class);
 
-    private static boolean printSQL = false;
+    private static boolean printSQL = true;
 
-    // DOTO 暂时写死最大查询条数为1000 @Value("${sql.rows.max.return}")
+    // TODO 暂时写死最大查询条数为1000 @Value("${sql.rows.max.return}")
     private Integer tooManyRows = 1000;
 
     public Object intercept(Invocation invocation) throws Throwable {

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface SysRolePrivilegeService {
 
-    List<SysRolePrivilegeDto> saveBatch(Long roleId, List<Long> privilegeIdList);
+    void saveBatch(Long roleId, List<Long> privilegeIdList);
 
     List<SysRolePrivilegeDto> findByRoleId(Long roleId);
 

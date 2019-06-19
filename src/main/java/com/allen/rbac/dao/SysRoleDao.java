@@ -24,4 +24,6 @@ public interface SysRoleDao {
 
     List<SysRole> findByParams(Map<String, Object> params);
 
+    int updateStatus(@Param("id") Long id, @Param("status") Integer status);
+
 }

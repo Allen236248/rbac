@@ -9,6 +9,8 @@ import java.util.List;
  */
 public class UpdateRoleRequestDto extends BaseDto {
 
+    private Long id;
+
     /**
      * 角色名称
      */
@@ -18,6 +20,14 @@ public class UpdateRoleRequestDto extends BaseDto {
      * 权限ID列表
      */
     private List<Long> privilegeIdList;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

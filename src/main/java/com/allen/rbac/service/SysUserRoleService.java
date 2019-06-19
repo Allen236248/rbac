@@ -10,6 +10,8 @@ public interface SysUserRoleService {
 
     List<SysUserRoleDto> findByUserId(Long userId);
 
+    List<SysUserRoleDto> findByRoleId(Long roleId);
+
     void deleteBatch(List<Long> idList);
 
 }

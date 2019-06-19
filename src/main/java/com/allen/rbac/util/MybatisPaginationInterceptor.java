@@ -184,8 +184,8 @@ public class MybatisPaginationInterceptor implements Interceptor {
     }
 
     @Override
-    public Object plugin(Object arg0) {
-        return Plugin.wrap(arg0, this);
+    public Object plugin(Object o) {
+        return Plugin.wrap(o, this);
     }
 
     @Override

@@ -8,18 +8,21 @@ import com.allen.rbac.service.SysPrivilegeService;
 import com.allen.rbac.service.SysRolePrivilegeService;
 import com.allen.rbac.util.BeanUtils;
 import com.allen.rbac.util.ServiceAssert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class SysRolePrivilegeServiceImpl implements SysRolePrivilegeService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SysRolePrivilegeServiceImpl.class);
 
     @Autowired
     private SysRolePrivilegeDao sysRolePrivilegeDao;
@@ -29,9 +32,10 @@ public class SysRolePrivilegeServiceImpl implements SysRolePrivilegeService {
 
     @Transactional
     @Override
-    public List<SysRolePrivilegeDto> saveBatch(Long roleId, List<Long> privilegeIdList) {
+    public void saveBatch(Long roleId, List<Long> privilegeIdList) {
         if(CollectionUtils.isEmpty(privilegeIdList)) {
-            return Collections.emptyList();
+            LOGGER.warn("增加角色权限关系-权限列表为空");
+            return;
         }
         List<Long> deleteIdList = new ArrayList<>();
 
@@ -69,7 +73,6 @@ public class SysRolePrivilegeServiceImpl implements SysRolePrivilegeService {
             sysRolePrivilegeDtoList.add(sysRolePrivilegeDto);
         }
         sysRolePrivilegeDao.insertBatch(BeanUtils.copyProperties(sysRolePrivilegeDtoList, SysRolePrivilege.class));
-        return sysRolePrivilegeDtoList;
     }
 
     @Override

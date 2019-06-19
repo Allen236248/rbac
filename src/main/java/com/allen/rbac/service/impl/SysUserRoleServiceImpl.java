@@ -81,6 +81,14 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
     }
 
     @Override
+    public List<SysUserRoleDto> findByRoleId(Long roleId) {
+        ServiceAssert.assertThat(null == roleId || roleId < 1, "角色ID无效");
+
+        List<SysUserRole> sysUserRoleList = sysUserRoleDao.findByRoleId(roleId);
+        return BeanUtils.copyProperties(sysUserRoleList, SysUserRoleDto.class);
+    }
+
+    @Override
     public void deleteBatch(List<Long> idList) {
         if(!CollectionUtils.isEmpty(idList)) {
             sysUserRoleDao.deleteBatch(idList);

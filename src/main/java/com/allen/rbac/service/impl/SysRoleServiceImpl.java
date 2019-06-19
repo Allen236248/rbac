@@ -2,13 +2,19 @@ package com.allen.rbac.service.impl;
 
 import com.allen.rbac.dao.SysRoleDao;
 import com.allen.rbac.dto.SysRoleDto;
+import com.allen.rbac.dto.SysRolePrivilegeDto;
+import com.allen.rbac.dto.SysUserRoleDto;
 import com.allen.rbac.entity.SysRole;
+import com.allen.rbac.enums.RoleStatus;
 import com.allen.rbac.service.SysRolePrivilegeService;
 import com.allen.rbac.service.SysRoleService;
+import com.allen.rbac.service.SysUserRoleService;
 import com.allen.rbac.util.BeanUtils;
 import com.allen.rbac.util.PageInfo;
 import com.allen.rbac.util.PageResult;
 import com.allen.rbac.util.ServiceAssert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +28,13 @@ import java.util.Map;
 @Service
 public class SysRoleServiceImpl implements SysRoleService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SysRoleServiceImpl.class);
+
     @Autowired
     private SysRoleDao sysRoleDao;
+
+    @Autowired
+    private SysUserRoleService sysUserRoleService;
 
     @Autowired
     private SysRolePrivilegeService sysRolePrivilegeService;
@@ -38,13 +49,14 @@ public class SysRoleServiceImpl implements SysRoleService {
         ServiceAssert.assertThat(null != findByName(name), "角色名称已存在");
 
         sysRoleDto.setName(name);
-        sysRoleDto.setStatus(1);
-        sysRoleDao.insert(BeanUtils.copyProperties(sysRoleDto, SysRole.class));
+        sysRoleDto.setStatus(RoleStatus.ENABLE.getId());
+        SysRole sysRole = BeanUtils.copyProperties(sysRoleDto, SysRole.class);
+        sysRoleDao.insert(sysRole);
+        Long roleId = sysRole.getId();
+        sysRoleDto.setId(roleId);
 
-        Long roleId = sysRoleDto.getId();
         List<Long> privilegeIdList = sysRoleDto.getPrivilegeIdList();
         sysRolePrivilegeService.saveBatch(roleId, privilegeIdList);
-
         return sysRoleDto;
     }
 
@@ -53,6 +65,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         ServiceAssert.assertThat(null == id || id.longValue() < 1, "角色ID不能为空或小于1");
 
         SysRole sysRole = sysRoleDao.findById(id);
+        LOGGER.info("SysRole = " + sysRole);
         return BeanUtils.copyProperties(sysRole, SysRoleDto.class);
     }
 
@@ -106,6 +119,21 @@ public class SysRoleServiceImpl implements SysRoleService {
         params.put("page", pageInfo);
         List<SysRole> sysRoleList = sysRoleDao.findByParams(params);
         return PageResult.build(pageInfo, BeanUtils.copyProperties(sysRoleList, SysRoleDto.class));
+    }
+
+    @Override
+    public void deleteSysRole(Long id) {
+        ServiceAssert.assertThat(null == id && id.longValue() < 1, "角色ID不能为空或小于1");
+
+        //如果有关联用户，不能删除
+        List<SysUserRoleDto> sysUserRoleDtoList = sysUserRoleService.findByRoleId(id);
+        ServiceAssert.assertThat(!CollectionUtils.isEmpty(sysUserRoleDtoList), "当前节点关联用户，不能删除");
+
+        //如果有关联权限，不能删除
+        List<SysRolePrivilegeDto> sysRolePrivilegeDtoList = sysRolePrivilegeService.findByRoleId(id);
+        ServiceAssert.assertThat(!CollectionUtils.isEmpty(sysRolePrivilegeDtoList), "当前节点关联权限，不能删除");
+
+        sysRoleDao.updateStatus(id, RoleStatus.DISABLE.getId());
     }
 
 }

@@ -27,6 +27,12 @@
         WHERE user_id = #{usreId}
     </select>
 
+    <select id="findByRoleId" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumnList" />
+        FROM sys_user_role
+        WHERE role_id = #{roleId}
+    </select>
+
     <delete id="deleteBatch">
         <if test="idList != null and idList.size() > 0">
             delete from sys_user_role where id in
