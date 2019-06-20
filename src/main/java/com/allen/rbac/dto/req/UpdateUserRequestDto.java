@@ -9,6 +9,8 @@ import java.util.List;
  */
 public class UpdateUserRequestDto extends BaseDto {
 
+    private Long id;
+
     /**
      * 登陆用户名
      */
@@ -28,6 +30,14 @@ public class UpdateUserRequestDto extends BaseDto {
      * 角色ID列表
      */
     private List<Long> roleIdList;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;

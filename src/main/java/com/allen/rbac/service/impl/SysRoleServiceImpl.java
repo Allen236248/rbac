@@ -122,7 +122,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     }
 
     @Override
-    public void deleteSysRole(Long id) {
+    public void deleteById(Long id) {
         ServiceAssert.assertThat(null == id && id.longValue() < 1, "角色ID不能为空或小于1");
 
         //如果有关联用户，不能删除

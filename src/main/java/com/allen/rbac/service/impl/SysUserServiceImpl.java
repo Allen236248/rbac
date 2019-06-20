@@ -2,6 +2,7 @@ package com.allen.rbac.service.impl;
 
 import com.allen.rbac.dao.SysUserDao;
 import com.allen.rbac.dto.SysUserDto;
+import com.allen.rbac.dto.SysUserRoleDto;
 import com.allen.rbac.entity.SysUser;
 import com.allen.rbac.enums.UserStatus;
 import com.allen.rbac.service.SysUserRoleService;
@@ -14,6 +15,7 @@ import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -98,6 +100,10 @@ public class SysUserServiceImpl implements SysUserService {
     public void deleteById(Long id) {
         ServiceAssert.assertThat(null == id && id.longValue() < 1, "用户ID不能为空或小于1");
 
+        //如果有关联角色，不能删除
+        List<SysUserRoleDto> sysUserRoleDtoList = sysUserRoleService.findByUserId(id);
+        ServiceAssert.assertThat(!CollectionUtils.isEmpty(sysUserRoleDtoList), "当前节点关联角色，不能删除");
+
         sysUserDao.updateStatus(id, 3);
     }
 
@@ -111,7 +117,7 @@ public class SysUserServiceImpl implements SysUserService {
         ServiceAssert.assertThat(null == exist, "用户不存在");
 
         String username = sysUserDto.getUsername();
-        if(StringUtils.hasText(username) && !username.equals(exist.getUsername())) {
+        if (StringUtils.hasText(username) && !username.equals(exist.getUsername())) {
             username = username.trim();
 
             SysUserDto existOfUsername = findByUsername(username);
@@ -120,7 +126,7 @@ public class SysUserServiceImpl implements SysUserService {
         }
 
         String mobile = sysUserDto.getMobile();
-        if(StringUtils.hasText(username) && !mobile.equals(exist.getMobile())) {
+        if (StringUtils.hasText(mobile) && !mobile.equals(exist.getMobile())) {
             mobile = mobile.trim();
 
             SysUserDto existOfMobile = findByMobile(mobile);
@@ -129,7 +135,7 @@ public class SysUserServiceImpl implements SysUserService {
         }
 
         String password = sysUserDto.getPassword();
-        if(StringUtils.hasText(password)) {
+        if (StringUtils.hasText(password)) {
             //修改密码。盐值使用username
             username = exist.getUsername();
             exist.setPassword(new Md5Hash(password, username, 1).toHex());

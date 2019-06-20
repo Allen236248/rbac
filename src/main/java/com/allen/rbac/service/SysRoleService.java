@@ -21,6 +21,6 @@ public interface SysRoleService {
 
     PageResult<SysRoleDto> findByParams(Map<String, Object> params, PageInfo pageInfo);
 
-    void deleteSysRole(Long id);
+    void deleteById(Long id);
 
 }

@@ -57,34 +57,45 @@ public class SysUserControllerTest {
         }
     }
 
-    /**
-     * 返回EnvConfig对象
-     *
-     * @throws Exception
-     */
     @Test
-    public void getEnvConfigWithDomain() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/env_conf_domain")
+    public void testListSysUser() throws Exception {
+        String data = env.getProperty("testListSysUserData");
+        mockMvc.perform(MockMvcRequestBuilders.post("/sys_user/list")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .accept(MediaType.APPLICATION_JSON_UTF8).content(data))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.envName").value("dev"))
                 .andDo(MockMvcResultHandlers.print());
     }
 
-    /**
-     * 返回EnvConfig对象
-     *
-     * @throws Exception
-     */
     @Test
-    public void addLearnResource() throws Exception {
-        String json = "{\"author\":\"MockMvc测试\", \"name\":\"MockMvc测试\", \"url\":\"http://www.baidu.com/\"}";
-        mockMvc.perform(MockMvcRequestBuilders.post("/learn/add")
-                .contentType(MediaType.APPLICATION_JSON_UTF8) // 表示客户端发送的数据格式
-                .accept(MediaType.APPLICATION_JSON_UTF8) // 表示客户端接受的数据格式
-                .content(json.getBytes()))
+    public void testGetSysUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/sys_user/get")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .param("id", "23"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void testDelSysUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/sys_user/del")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .param("id", "25"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
+    public void testUpdateSysUser() throws Exception {
+        String data = env.getProperty("testUpdateSysUserData");
+        mockMvc.perform(MockMvcRequestBuilders.post("/sys_user/update")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .content(data))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                //.andExpect(MockMvcResultMatchers.jsonPath("$.envName").value("dev"))
                 .andDo(MockMvcResultHandlers.print());
     }
 }

@@ -91,7 +91,7 @@ public class SysRoleController extends BaseController {
     public ApiResult<Void> delSysRole(@RequestParam Long id) {
         ApiResult<Void> apiResult = ApiResult.build();
         try {
-            sysRoleService.deleteSysRole(id);
+            sysRoleService.deleteById(id);
         } catch (ServiceException se) {
             LOGGER.error("删除角色失败，" + se.getMessage());
             apiResult.error("删除角色失败，" + se.getMessage());

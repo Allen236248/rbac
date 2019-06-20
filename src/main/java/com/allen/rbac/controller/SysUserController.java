@@ -72,6 +72,7 @@ public class SysUserController extends BaseController {
             LOGGER.error("查询用户列表失败，" + se.getMessage());
             apiResult.error("查询用户列表失败，" + se.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             LOGGER.error("查询用户列表失败，" + e.getMessage());
             apiResult.error("查询用户列表失败，" + e.getMessage());
         }
@@ -114,6 +115,7 @@ public class SysUserController extends BaseController {
         ApiResult<SysUserDto> apiResult = ApiResult.build();
         try {
             SysUserDto sysUserDto = new SysUserDto();
+            sysUserDto.setId(updateUserRequestDto.getId());
             sysUserDto.setUsername(updateUserRequestDto.getUsername());
             sysUserDto.setMobile(updateUserRequestDto.getMobile());
             sysUserDto.setPassword(updateUserRequestDto.getPassword());

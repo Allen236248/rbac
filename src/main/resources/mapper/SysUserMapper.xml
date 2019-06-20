@@ -9,6 +9,13 @@
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
+        <collection property="roleList" ofType="com.allen.rbac.entity.SysRole">
+            <result column="sr_id" property="id" />
+            <result column="sr_name" property="name" />
+            <result column="sr_status" property="status" />
+            <result column="sr_create_time" property="createTime" />
+            <result column="sr_update_time" property="updateTime" />
+        </collection>
     </resultMap>
 
     <sql id="BaseColumnList" >
@@ -21,9 +28,13 @@
     </insert>
 
     <select id="findById" resultMap="BaseResultMap">
-        SELECT <include refid="BaseColumnList" />
-        FROM sys_user
-        WHERE id = #{id} and status = 1
+        SELECT su.id, su.username, su.password, su.mobile, su.status, su.create_time, su.update_time,
+          sr.id sr_id, sr.name sr_name, sr.status sr_status, sr.create_time sr_create_time,
+          sr.update_time sr_update_time
+        FROM sys_user su
+        INNER JOIN sys_user_role sur on su.id = sur.user_id
+        INNER JOIN sys_role sr on sur.role_id = sr.id
+        WHERE su.id = #{id} and su.status = 1
     </select>
 
     <select id="findByUsername" resultMap="BaseResultMap">
@@ -39,16 +50,20 @@
     </select>
 
     <select id="findByParams" resultMap="BaseResultMap">
-        select <include refid="BaseColumnList" />
-        from sys_user
-        where status = 1
+        SELECT su.id, su.username, su.password, su.mobile, su.status, su.create_time, su.update_time,
+        sr.id sr_id, sr.name sr_name, sr.status sr_status, sr.create_time sr_create_time,
+        sr.update_time sr_update_time
+        FROM sys_user su
+        INNER JOIN sys_user_role sur on su.id = sur.user_id
+        INNER JOIN sys_role sr on sur.role_id = sr.id
+        WHERE su.status = 1
         <if test="mobile != null and mobile != ''">
-            and mobile = #{mobile}
+            and su.mobile = #{mobile}
         </if>
         <if test="roleId != null and roleId != ''">
-
+            and sr.id = #{roleId}
         </if>
-        order by update_time desc
+        order by su.update_time desc
     </select>
 
     <update id="updateStatus" >

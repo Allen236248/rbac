@@ -35,7 +35,7 @@ public class SysUser extends BaseEntity {
     /**
      * 角色列表
      */
-    private List<SysRole> sysRoleList;
+    private List<SysRole> roleList;
 
     public Long getId() {
         return id;
@@ -77,11 +77,11 @@ public class SysUser extends BaseEntity {
         this.status = status;
     }
 
-    public List<SysRole> getSysRoleList() {
-        return sysRoleList;
+    public List<SysRole> getRoleList() {
+        return roleList;
     }
 
-    public void setSysRoleList(List<SysRole> sysRoleList) {
-        this.sysRoleList = sysRoleList;
+    public void setRoleList(List<SysRole> roleList) {
+        this.roleList = roleList;
     }
 }
