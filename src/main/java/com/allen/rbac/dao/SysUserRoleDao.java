@@ -11,9 +11,9 @@ import java.util.List;
 @Repository
 public interface SysUserRoleDao {
 
-    int saveBatch(List<SysUserRole> sysUserRoleList);
+    int insertBatch(@Param("sysUserRoleList") List<SysUserRole> sysUserRoleList);
 
-    void deleteBatch(List<Long> idList);
+    void deleteBatch(@Param("idList") List<Long> idList);
 
     List<SysUserRole> findByUserId(@Param("userId") Long userId);
 

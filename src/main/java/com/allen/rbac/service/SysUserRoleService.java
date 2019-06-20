@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface SysUserRoleService {
 
-    List<SysUserRoleDto> saveBatch(Long userId, List<Long> roleIdList);
+    void saveBatch(Long userId, List<Long> roleIdList);
 
     List<SysUserRoleDto> findByUserId(Long userId);
 

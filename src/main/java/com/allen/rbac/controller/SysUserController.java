@@ -42,6 +42,7 @@ public class SysUserController extends BaseController {
             LOGGER.error("增加用户失败，" + se.getMessage());
             apiResult.error("增加用户失败，" + se.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             LOGGER.error("增加用户失败，" + e.getMessage());
             apiResult.error("增加用户失败，" + e.getMessage());
         }

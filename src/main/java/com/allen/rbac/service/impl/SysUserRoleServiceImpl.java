@@ -8,6 +8,8 @@ import com.allen.rbac.service.SysRoleService;
 import com.allen.rbac.service.SysUserRoleService;
 import com.allen.rbac.util.BeanUtils;
 import com.allen.rbac.util.ServiceAssert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,8 @@ import java.util.List;
 @Service
 public class SysUserRoleServiceImpl implements SysUserRoleService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SysUserRoleServiceImpl.class);
+
     @Autowired
     private SysUserRoleDao sysUserRoleDao;
 
@@ -29,9 +33,10 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
 
     @Transactional
     @Override
-    public List<SysUserRoleDto> saveBatch(Long userId, List<Long> roleIdList) {
+    public void saveBatch(Long userId, List<Long> roleIdList) {
         if(CollectionUtils.isEmpty(roleIdList)) {
-            return Collections.emptyList();
+            LOGGER.warn("增加用户角色关系-角色列表为空");
+            return;
         }
         List<Long> deleteIdList = new ArrayList<>();
 
@@ -68,8 +73,7 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
             sysUserRoleDto.setUpdateTime(new Date());
             sysUserRoleDtoList.add(sysUserRoleDto);
         }
-        sysUserRoleDao.saveBatch(BeanUtils.copyProperties(sysUserRoleDtoList, SysUserRole.class));
-        return sysUserRoleDtoList;
+        sysUserRoleDao.insertBatch(BeanUtils.copyProperties(sysUserRoleDtoList, SysUserRole.class));
     }
 
     @Override

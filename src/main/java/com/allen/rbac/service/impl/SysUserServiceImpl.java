@@ -3,6 +3,7 @@ package com.allen.rbac.service.impl;
 import com.allen.rbac.dao.SysUserDao;
 import com.allen.rbac.dto.SysUserDto;
 import com.allen.rbac.entity.SysUser;
+import com.allen.rbac.enums.UserStatus;
 import com.allen.rbac.service.SysUserRoleService;
 import com.allen.rbac.service.SysUserService;
 import com.allen.rbac.util.BeanUtils;
@@ -48,13 +49,15 @@ public class SysUserServiceImpl implements SysUserService {
         sysUserDto.setMobile(mobile);
         //生成默认密码。默认为123456；盐值使用username
         sysUserDto.setPassword(new Md5Hash("123456", username, 1).toHex());
-        sysUserDto.setStatus(1);
-        sysUserDao.insert(BeanUtils.copyProperties(sysUserDto, SysUser.class));
+        sysUserDto.setStatus(UserStatus.NORMAL.getId());
+        SysUser sysUser = BeanUtils.copyProperties(sysUserDto, SysUser.class);
+        sysUserDao.insert(sysUser);
 
-        Long userId = sysUserDto.getId();
+        Long userId = sysUser.getId();
         List<Long> roleIdList = sysUserDto.getRoleIdList();
         sysUserRoleService.saveBatch(userId, roleIdList);
 
+        sysUserDto.setId(userId);
         return sysUserDto;
     }
 

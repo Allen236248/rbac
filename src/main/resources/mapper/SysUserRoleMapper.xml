@@ -24,7 +24,7 @@
     <select id="findByUserId" resultMap="BaseResultMap">
         SELECT <include refid="BaseColumnList" />
         FROM sys_user_role
-        WHERE user_id = #{usreId}
+        WHERE user_id = #{userId}
     </select>
 
     <select id="findByRoleId" resultMap="BaseResultMap">
