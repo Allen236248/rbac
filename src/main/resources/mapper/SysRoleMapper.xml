@@ -7,14 +7,6 @@
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
-    </resultMap>
-
-    <resultMap id="BaseResultMapWithPrivilege" type="com.allen.rbac.entity.SysRole">
-        <id column="id" property="id" />
-        <result column="name" property="name" />
-        <result column="status" property="status" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
         <collection property="privilegeList" ofType="com.allen.rbac.entity.SysPrivilege">
             <result column="sp_id" property="id" />
             <result column="sp_pid" property="pid" />
@@ -40,7 +32,7 @@
         VALUES (#{name}, #{status}, now(), now())
     </insert>
 
-    <select id="findById" resultMap="BaseResultMapWithPrivilege">
+    <select id="findById" resultMap="BaseResultMap">
         SELECT sr.id, sr.name, sr.status, sr.create_time, sr.update_time,
           sp.id sp_id, sp.pid sp_pid, sp.platform sp_platform, sp.name sp_name, sp.code sp_code,
           sp.type sp_type, sp.sort sp_sort, sp.url sp_url, sp.status sp_status, sp.remark sp_remark,
