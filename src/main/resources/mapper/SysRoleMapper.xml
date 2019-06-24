@@ -51,9 +51,14 @@
 
     <select id="findByIdList" resultMap="BaseResultMap">
         <if test="null != idList and idList.size() > 0">
-            select <include refid="BaseColumnList" />
-            from sys_role
-            where status = 1 and id in
+            SELECT sr.id, sr.name, sr.status, sr.create_time, sr.update_time,
+            sp.id sp_id, sp.pid sp_pid, sp.platform sp_platform, sp.name sp_name, sp.code sp_code,
+            sp.type sp_type, sp.sort sp_sort, sp.url sp_url, sp.status sp_status, sp.remark sp_remark,
+            sp.create_time sp_create_time, sp.update_time sp_update_time
+            FROM sys_role sr
+            INNER JOIN sys_role_privilege srp on sr.id = srp.role_id
+            INNER JOIN sys_privilege sp on srp.privilege_id = sp.id
+            where sr.status = 1 and sr.id in
             <foreach collection="idList" open="(" item="id" separator="," close=")">
                 #{id}
             </foreach>

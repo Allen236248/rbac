@@ -22,4 +22,6 @@ public interface SysUserService {
 
     SysUserDto updateSysUser(SysUserDto sysUserDto);
 
+    SysUserDto findByUsernameWithPrivilege(String username);
+
 }

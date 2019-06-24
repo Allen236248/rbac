@@ -2,6 +2,8 @@ package com.allen.rbac.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.allen.rbac.dto.SysPrivilegeDto;
+import com.allen.rbac.dto.SysUserDto;
+import com.allen.rbac.service.SysUserService;
 import com.allen.rbac.util.ApiResult;
 import com.allen.rbac.util.ServiceException;
 import org.apache.shiro.SecurityUtils;
@@ -11,6 +13,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,9 +26,12 @@ public class LoginController extends BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
+    @Autowired
+    private SysUserService sysUserService;
+
     @PostMapping("/login")
-    public ApiResult<SysPrivilegeDto> login(HttpServletRequest request) {
-        ApiResult<SysPrivilegeDto> apiResult = ApiResult.build();
+    public ApiResult<SysUserDto> login(HttpServletRequest request) {
+        ApiResult<SysUserDto> apiResult = ApiResult.build();
         try {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
@@ -36,6 +42,10 @@ public class LoginController extends BaseController {
             LOGGER.info("token=" + JSON.toJSONString(token));
             Subject subject = SecurityUtils.getSubject();
             subject.login(token);
+
+            //登陆成功，返回用户的所有权限
+            SysUserDto sysUserDto = sysUserService.findByUsernameWithPrivilege(username);
+            apiResult.setAttach(sysUserDto);
         } catch (ServiceException se) {
             LOGGER.error("登陆失败，", se);
             apiResult.error("登陆失败");

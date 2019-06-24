@@ -16,7 +16,7 @@ public class BeanUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeanUtils.class);
 
-    private static CopyStrategy strategy = CopyStrategy.CGLIB;
+    private static CopyStrategy strategy = CopyStrategy.FastJson;
 
     public enum CopyStrategy {
         FastJson, Spring_Reflect, CGLIB

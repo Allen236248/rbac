@@ -38,9 +38,13 @@
     </select>
 
     <select id="findByUsername" resultMap="BaseResultMap">
-        SELECT <include refid="BaseColumnList" />
-        FROM sys_user
-        WHERE username = #{username} and status = 1
+        SELECT su.id, su.username, su.password, su.mobile, su.status, su.create_time, su.update_time,
+          sr.id sr_id, sr.name sr_name, sr.status sr_status, sr.create_time sr_create_time,
+          sr.update_time sr_update_time
+        FROM sys_user su
+        INNER JOIN sys_user_role sur on su.id = sur.user_id
+        INNER JOIN sys_role sr on sur.role_id = sr.id
+        WHERE su.username = #{username} and su.status = 1
     </select>
 
     <select id="findByMobile" resultMap="BaseResultMap">

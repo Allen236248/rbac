@@ -1,10 +1,12 @@
 package com.allen.rbac.service.impl;
 
 import com.allen.rbac.dao.SysUserDao;
+import com.allen.rbac.dto.SysRoleDto;
 import com.allen.rbac.dto.SysUserDto;
 import com.allen.rbac.dto.SysUserRoleDto;
 import com.allen.rbac.entity.SysUser;
 import com.allen.rbac.enums.UserStatus;
+import com.allen.rbac.service.SysRoleService;
 import com.allen.rbac.service.SysUserRoleService;
 import com.allen.rbac.service.SysUserService;
 import com.allen.rbac.util.BeanUtils;
@@ -12,23 +14,31 @@ import com.allen.rbac.util.PageInfo;
 import com.allen.rbac.util.PageResult;
 import com.allen.rbac.util.ServiceAssert;
 import org.apache.shiro.crypto.hash.Md5Hash;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class SysUserServiceImpl implements SysUserService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SysUserServiceImpl.class);
+
     @Autowired
     private SysUserDao sysUserDao;
 
     @Autowired
     private SysUserRoleService sysUserRoleService;
+
+    @Autowired
+    private SysRoleService sysRoleService;
 
     @Transactional
     @Override
@@ -149,4 +159,16 @@ public class SysUserServiceImpl implements SysUserService {
         return sysUserDto;
     }
 
+    @Override
+    public SysUserDto findByUsernameWithPrivilege(String username) {
+        SysUserDto sysUserDto = findByUsername(username);
+        List<SysRoleDto> roleList = sysUserDto.getRoleList();
+        List<Long> roleIdList = new ArrayList<>();
+        for(SysRoleDto sysRoleDto : roleList) {
+            roleIdList.add(sysRoleDto.getId());
+        }
+        List<SysRoleDto> sysRoleDtoList = sysRoleService.findByIdList(roleIdList);
+        sysUserDto.setRoleList(sysRoleDtoList);
+        return sysUserDto;
+    }
 }
