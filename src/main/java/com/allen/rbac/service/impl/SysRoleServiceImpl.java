@@ -1,6 +1,7 @@
 package com.allen.rbac.service.impl;
 
 import com.allen.rbac.dao.SysRoleDao;
+import com.allen.rbac.dto.SysPrivilegeDto;
 import com.allen.rbac.dto.SysRoleDto;
 import com.allen.rbac.dto.SysRolePrivilegeDto;
 import com.allen.rbac.dto.SysUserRoleDto;
@@ -66,7 +67,9 @@ public class SysRoleServiceImpl implements SysRoleService {
 
         SysRole sysRole = sysRoleDao.findById(id);
         LOGGER.info("SysRole = " + sysRole);
-        return BeanUtils.copyProperties(sysRole, SysRoleDto.class);
+        SysRoleDto sysRoleDto = BeanUtils.copyProperties(sysRole, SysRoleDto.class);
+        sysRoleDto.setPrivilegeList(BeanUtils.copyProperties(sysRoleDto.getPrivilegeList(), SysPrivilegeDto.class));
+        return sysRoleDto;
     }
 
     @Override
@@ -83,7 +86,11 @@ public class SysRoleServiceImpl implements SysRoleService {
             return Collections.emptyList();
         }
         List<SysRole> sysRoleList = sysRoleDao.findByIdList(idList);
-        return BeanUtils.copyProperties(sysRoleList, SysRoleDto.class);
+        List<SysRoleDto> sysRoleDtoList = BeanUtils.copyProperties(sysRoleList, SysRoleDto.class);
+        for(SysRoleDto sysRoleDto : sysRoleDtoList) {
+            sysRoleDto.setPrivilegeList(BeanUtils.copyProperties(sysRoleDto.getPrivilegeList(), SysPrivilegeDto.class));
+        }
+        return sysRoleDtoList;
     }
 
     @Transactional

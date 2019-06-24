@@ -16,26 +16,25 @@ public class BeanUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BeanUtils.class);
 
-    private static CopyStrategy strategy = CopyStrategy.FastJson;
+    private static CopyStrategy strategy = CopyStrategy.CGLIB;
 
     public enum CopyStrategy {
         FastJson, Spring_Reflect, CGLIB
     }
 
     /**
-     *
      * @param source
      * @param t
      * @param <T>
      * @return
      */
     public static <T> T copyProperties(Object source, Class<T> t) {
-        if(null == source) {
+        if (null == source) {
             LOGGER.warn("source is null");
             return null;
         }
 
-        try{
+        try {
             switch (strategy) {
                 case FastJson:
                     String jsonString = JSON.toJSONString(source);
@@ -48,45 +47,49 @@ public class BeanUtils {
                 default:
                     break;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOGGER.error("对象转换错误：", e);
         }
         return null;
     }
 
     /**
-     *
      * @param source
      * @param t
      * @param <T>
      * @return
      */
     public static <T> List<T> copyProperties(List<?> source, Class<T> t) {
-        if(CollectionUtils.isEmpty(source)) {
+        if (CollectionUtils.isEmpty(source)) {
             LOGGER.warn("source is empty");
             return Collections.emptyList();
         }
 
         List<T> tList = new ArrayList<>();
-        for(int i = 0; i < source.size(); i++) {
+        for (int i = 0; i < source.size(); i++) {
             tList.add(copyProperties(source.get(i), t));
         }
         return tList;
     }
 
     /**
-     * 通过spring转换
+     * <p>通过spring转换。对于复杂数据类型的转换，如：List/Set等，仅将源数据给到目标数据，不会进行泛型转换。</p>
+     * <code>
+     *     User user = ...;//User中有List<Role> roleList属性
+     *     UserDto userDto = BeanUtils.copyProperties(user, UserDto.class); //UserDto中有List<RoleDto> roleList属性
+     * </code>
+     * <p>得到的userDto中List<RoleDto> roleList已变更为List<Role> roleList</p>
      *
      * @param source
      * @param target
      */
     public static void copyProperties(Object source, Object target) {
-        if(null == source || null == target) {
+        if (null == source || null == target) {
             LOGGER.warn("source and target can not be null");
             return;
         }
 
-        try{
+        try {
             switch (strategy) {
                 case Spring_Reflect:
                     org.springframework.beans.BeanUtils.copyProperties(source, target);
@@ -96,20 +99,20 @@ public class BeanUtils {
                     beanCopier.copy(source, target, null);
                     break;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error("对象转换错误：", e);
         }
     }
 
-    public static void main(String...args) {
+    public static void main(String... args) {
         SysUser sysUser = new SysUser();
         sysUser.setUsername("allen");
         sysUser.setPassword("123456");
         sysUser.setStatus(1);
 
         long s = System.currentTimeMillis();
-        for(int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 1000000; i++) {
             sysUser.setId(new Long(i));
             copyProperties(sysUser, SysUserDto.class);
         }

@@ -78,7 +78,9 @@ public class SysUserServiceImpl implements SysUserService {
         ServiceAssert.assertThat(null == id || id.longValue() < 1, "用户ID不能为空或小于1");
 
         SysUser sysUser = sysUserDao.findById(id);
-        return BeanUtils.copyProperties(sysUser, SysUserDto.class);
+        SysUserDto sysUserDto = BeanUtils.copyProperties(sysUser, SysUserDto.class);
+        sysUserDto.setRoleList(BeanUtils.copyProperties(sysUserDto.getRoleList(), SysRoleDto.class));
+        return sysUserDto;
     }
 
     @Override
@@ -86,7 +88,9 @@ public class SysUserServiceImpl implements SysUserService {
         ServiceAssert.assertThat(!StringUtils.hasText(username), "用户名不能为空");
 
         SysUser sysUser = sysUserDao.findByUsername(username);
-        return BeanUtils.copyProperties(sysUser, SysUserDto.class);
+        SysUserDto sysUserDto = BeanUtils.copyProperties(sysUser, SysUserDto.class);
+        sysUserDto.setRoleList(BeanUtils.copyProperties(sysUserDto.getRoleList(), SysRoleDto.class));
+        return sysUserDto;
     }
 
     @Override
@@ -103,7 +107,12 @@ public class SysUserServiceImpl implements SysUserService {
 
         params.put("page", pageInfo);
         List<SysUser> sysUserList = sysUserDao.findByParams(params);
-        return PageResult.build(pageInfo, BeanUtils.copyProperties(sysUserList, SysUserDto.class));
+
+        List<SysUserDto> sysUserDtoList = BeanUtils.copyProperties(sysUserList, SysUserDto.class);
+        for(SysUserDto sysUserDto : sysUserDtoList) {
+            sysUserDto.setRoleList(BeanUtils.copyProperties(sysUserDto.getRoleList(), SysRoleDto.class));
+        }
+        return PageResult.build(pageInfo, sysUserDtoList);
     }
 
     @Override
