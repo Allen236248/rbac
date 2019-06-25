@@ -26,7 +26,7 @@ public class SysPrivilege extends BaseEntity {
     private String name;
 
     /**
-     * 权限码。有什么作用，是否需要？
+     * 权限码。用户权限校验时候进行对比
      */
     private String code;
 

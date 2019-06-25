@@ -89,12 +89,12 @@ public class CustomShiroRealm extends AuthorizingRealm {
                 continue;
             }
 
-            authorizationInfo.addRole(sysRoleDto.getName());
+            authorizationInfo.addRole(sysRoleDto.getCode());
             for(SysPrivilegeDto sysPrivilegeDto : sysPrivilegeDtoList) {
-                //
                 authorizationInfo.addStringPermission(sysPrivilegeDto.getCode());
             }
         }
+        sysUserDto.setRoleList(sysRoleDtoList);
         return authorizationInfo;
     }
 

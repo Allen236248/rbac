@@ -15,6 +15,11 @@ public class AddRoleRequestDto extends BaseDto {
     private String name;
 
     /**
+     * 角色码
+     */
+    private String code;
+
+    /**
      * 权限ID列表
      */
     private List<Long> privilegeIdList;
@@ -25,6 +30,14 @@ public class AddRoleRequestDto extends BaseDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public List<Long> getPrivilegeIdList() {

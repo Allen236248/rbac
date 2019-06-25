@@ -45,11 +45,19 @@ public class SysRoleServiceImpl implements SysRoleService {
     public SysRoleDto addSysRole(SysRoleDto sysRoleDto) {
         String name = sysRoleDto.getName();
         ServiceAssert.assertThat(!StringUtils.hasText(name), "角色名称不能为空");
+
+        String code = sysRoleDto.getCode();
+        ServiceAssert.assertThat(!StringUtils.hasText(code), "角色码不能为空");
+
         //去除左右空格
         name = name.trim();
         ServiceAssert.assertThat(null != findByName(name), "角色名称已存在");
 
+        code = code.trim();
+        ServiceAssert.assertThat(null != findByCode(code), "角色码已存在");
+
         sysRoleDto.setName(name);
+        sysRoleDto.setCode(code);
         sysRoleDto.setStatus(RoleStatus.ENABLE.getId());
         SysRole sysRole = BeanUtils.copyProperties(sysRoleDto, SysRole.class);
         sysRoleDao.insert(sysRole);
@@ -77,6 +85,14 @@ public class SysRoleServiceImpl implements SysRoleService {
         ServiceAssert.assertThat(!StringUtils.hasText(name), "角色名称不能为空");
 
         SysRole sysRole = sysRoleDao.findByName(name);
+        return BeanUtils.copyProperties(sysRole, SysRoleDto.class);
+    }
+
+    @Override
+    public SysRoleDto findByCode(String code) {
+        ServiceAssert.assertThat(!StringUtils.hasText(code), "角色码不能为空");
+
+        SysRole sysRole = sysRoleDao.findByCode(code);
         return BeanUtils.copyProperties(sysRole, SysRoleDto.class);
     }
 

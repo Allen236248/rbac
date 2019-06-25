@@ -15,6 +15,11 @@ public class SysRole extends BaseEntity {
     private String name;
 
     /**
+     * 角色码。不能修改
+     */
+    private String code;
+
+    /**
      * 角色状态
      * 0：禁用
      * 1：启用
@@ -40,6 +45,14 @@ public class SysRole extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Integer getStatus() {

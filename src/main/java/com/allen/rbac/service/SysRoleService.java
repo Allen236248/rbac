@@ -15,6 +15,8 @@ public interface SysRoleService {
 
     SysRoleDto findByName(String name);
 
+    SysRoleDto findByCode(String code);
+
     List<SysRoleDto> findByIdList(List<Long> idList);
 
     SysRoleDto updateSysRole(SysRoleDto sysRoleDto);

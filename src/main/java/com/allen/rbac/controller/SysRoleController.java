@@ -33,6 +33,7 @@ public class SysRoleController extends BaseController {
         try {
             SysRoleDto sysRoleDto = new SysRoleDto();
             sysRoleDto.setName(addRoleRequestDto.getName());
+            sysRoleDto.setCode(addRoleRequestDto.getCode());
             sysRoleDto.setPrivilegeIdList(addRoleRequestDto.getPrivilegeIdList());
             sysRoleService.addSysRole(sysRoleDto);
 

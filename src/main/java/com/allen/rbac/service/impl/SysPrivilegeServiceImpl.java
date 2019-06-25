@@ -168,7 +168,6 @@ public class SysPrivilegeServiceImpl implements SysPrivilegeService {
         }
         if(StringUtils.hasText(url) && !url.equals(exist.getUrl())) {
             exist.setUrl(url.trim());
-            exist.setCode(buildPrivilegeCode(exist.getPlatform(), exist.getUrl()));
         }
         if(StringUtils.hasText(remark) && !remark.equals(exist.getRemark())) {
             exist.setRemark(remark.trim());

@@ -71,7 +71,6 @@
           type = #{type},
           sort = #{sort},
           url = #{url},
-          code = #{code},
           remark = #{remark},
           update_time = now()
         WHERE id = #{id} and status = 1

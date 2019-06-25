@@ -4,6 +4,7 @@
     <resultMap id="BaseResultMap" type="com.allen.rbac.entity.SysRole">
         <id column="id" property="id" />
         <result column="name" property="name" />
+        <result column="code" property="code" />
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -24,16 +25,16 @@
     </resultMap>
 
     <sql id="BaseColumnList" >
-        id, name, status, create_time, update_time
+        id, name, code, status, create_time, update_time
     </sql>
 
     <insert id="insert" parameterType="com.allen.rbac.entity.SysRole" useGeneratedKeys="true" keyProperty="id" >
-        INSERT INTO sys_role (name, status, create_time, update_time)
-        VALUES (#{name}, #{status}, now(), now())
+        INSERT INTO sys_role (name, code, status, create_time, update_time)
+        VALUES (#{name}, #{code}, #{status}, now(), now())
     </insert>
 
     <select id="findById" resultMap="BaseResultMap">
-        SELECT sr.id, sr.name, sr.status, sr.create_time, sr.update_time,
+        SELECT sr.id, sr.name, sr.code, sr.status, sr.create_time, sr.update_time,
           sp.id sp_id, sp.pid sp_pid, sp.platform sp_platform, sp.name sp_name, sp.code sp_code,
           sp.type sp_type, sp.sort sp_sort, sp.url sp_url, sp.status sp_status, sp.remark sp_remark,
           sp.create_time sp_create_time, sp.update_time sp_update_time
@@ -49,9 +50,15 @@
         WHERE name = #{name} and status = 1
     </select>
 
+    <select id="findByCode" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumnList" />
+        FROM sys_role
+        WHERE code = #{code} and status = 1
+    </select>
+
     <select id="findByIdList" resultMap="BaseResultMap">
         <if test="null != idList and idList.size() > 0">
-            SELECT sr.id, sr.name, sr.status, sr.create_time, sr.update_time,
+            SELECT sr.id, sr.name, sr.code, sr.status, sr.create_time, sr.update_time,
             sp.id sp_id, sp.pid sp_pid, sp.platform sp_platform, sp.name sp_name, sp.code sp_code,
             sp.type sp_type, sp.sort sp_sort, sp.url sp_url, sp.status sp_status, sp.remark sp_remark,
             sp.create_time sp_create_time, sp.update_time sp_update_time

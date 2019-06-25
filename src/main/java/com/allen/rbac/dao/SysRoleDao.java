@@ -18,6 +18,8 @@ public interface SysRoleDao {
 
     SysRole findByName(@Param("name") String name);
 
+    SysRole findByCode(@Param("code") String code);
+
     List<SysRole> findByIdList(@Param("idList") List<Long> idList);
 
     int update(SysRole sysRole);
