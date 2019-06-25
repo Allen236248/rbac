@@ -1,4 +1,4 @@
-package com.allen.rbac.util;
+package com.allen.rbac.exception;
 
 public class ServiceException extends RuntimeException {
 

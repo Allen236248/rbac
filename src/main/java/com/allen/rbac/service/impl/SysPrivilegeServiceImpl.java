@@ -10,7 +10,7 @@ import com.allen.rbac.enums.PrivilegeType;
 import com.allen.rbac.service.SysPrivilegeService;
 import com.allen.rbac.service.SysRolePrivilegeService;
 import com.allen.rbac.util.BeanUtils;
-import com.allen.rbac.util.ServiceAssert;
+import com.allen.rbac.exception.ServiceAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

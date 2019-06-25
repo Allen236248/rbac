@@ -13,7 +13,7 @@ import com.allen.rbac.service.SysUserRoleService;
 import com.allen.rbac.util.BeanUtils;
 import com.allen.rbac.util.PageInfo;
 import com.allen.rbac.util.PageResult;
-import com.allen.rbac.util.ServiceAssert;
+import com.allen.rbac.exception.ServiceAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,7 +5,8 @@ import com.allen.rbac.dto.req.AddPrivilegeRequestDto;
 import com.allen.rbac.dto.req.UpdatePrivilegeRequestDto;
 import com.allen.rbac.service.SysPrivilegeService;
 import com.allen.rbac.util.ApiResult;
-import com.allen.rbac.util.ServiceException;
+import com.allen.rbac.exception.ServiceException;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,7 @@ public class SysPrivilegeController extends BaseController {
         return apiResult;
     }
 
+    @RequiresPermissions("PC_OEM-del-1560931146067")
     @GetMapping("/get")
     public ApiResult<SysPrivilegeDto> getSysPrivilege(@RequestParam Long id) {
         ApiResult<SysPrivilegeDto> apiResult = ApiResult.build();

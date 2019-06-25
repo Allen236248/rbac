@@ -3,6 +3,7 @@ package com.allen.rbac.shiro;
 import com.allen.rbac.dto.SysPrivilegeDto;
 import com.allen.rbac.dto.SysRoleDto;
 import com.allen.rbac.dto.SysUserDto;
+import com.allen.rbac.service.SysRoleService;
 import com.allen.rbac.service.SysUserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -25,10 +27,13 @@ public class CustomShiroRealm extends AuthorizingRealm {
     @Autowired
     private SysUserService sysUserService;
 
+    @Autowired
+    private SysRoleService sysRoleService;
+
     /**
      * 认证（登陆）:用来进行身份认证，即验证用户输入的用户名和密码是否正确
      *
-     * @param token
+     * @param authenticationToken
      * @return
      * @throws AuthenticationException
      */
@@ -48,7 +53,7 @@ public class CustomShiroRealm extends AuthorizingRealm {
             throw new AuthenticationException("用户名或密码错误");
         }
         ByteSource credentialsSalt = ByteSource.Util.bytes(username);
-        return new SimpleAuthenticationInfo(username, sysUserDto.getPassword(), credentialsSalt, getName());
+        return new SimpleAuthenticationInfo(sysUserDto, sysUserDto.getPassword(), credentialsSalt, getName());
     }
 
     /**
@@ -59,26 +64,34 @@ public class CustomShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal) {
-        LOGGER.info("获取权限配置");
+        LOGGER.info("请求授权");
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         SysUserDto sysUserDto = (SysUserDto) principal.getPrimaryPrincipal();
         if(null == sysUserDto) {
-            LOGGER.info("获取权限配置-用户信息为空");
+            LOGGER.warn("请求授权-用户信息为空");
             return null;
         }
         List<SysRoleDto> roleList = sysUserDto.getRoleList();
         if(null == roleList || roleList.isEmpty()) {
-            LOGGER.info("获取权限配置-用户的角色为空");
+            LOGGER.warn("请求授权-用户的角色为空");
             return null;
         }
+        List<Long> roleIdList = new ArrayList<>();
         for(SysRoleDto role : roleList) {
-            List<SysPrivilegeDto> sysPrivilegeDtoList = role.getPrivilegeList();
+            roleIdList.add(role.getId());
+        }
+
+        List<SysRoleDto> sysRoleDtoList = sysRoleService.findByIdList(roleIdList);
+        for(SysRoleDto sysRoleDto : sysRoleDtoList) {
+            List<SysPrivilegeDto> sysPrivilegeDtoList = sysRoleDto.getPrivilegeList();
             if(null == sysPrivilegeDtoList || sysPrivilegeDtoList.isEmpty()) {
-                LOGGER.info("获取权限配置-用户的角色-" + role.getName() + " 对应的权限为空");
+                LOGGER.warn("请求授权-用户的角色：" + sysRoleDto.getName() + " 对应的权限为空");
                 continue;
             }
-            authorizationInfo.addRole(role.getName());
+
+            authorizationInfo.addRole(sysRoleDto.getName());
             for(SysPrivilegeDto sysPrivilegeDto : sysPrivilegeDtoList) {
+                //
                 authorizationInfo.addStringPermission(sysPrivilegeDto.getCode());
             }
         }

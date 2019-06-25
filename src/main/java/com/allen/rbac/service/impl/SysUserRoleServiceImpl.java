@@ -7,7 +7,7 @@ import com.allen.rbac.entity.SysUserRole;
 import com.allen.rbac.service.SysRoleService;
 import com.allen.rbac.service.SysUserRoleService;
 import com.allen.rbac.util.BeanUtils;
-import com.allen.rbac.util.ServiceAssert;
+import com.allen.rbac.exception.ServiceAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 

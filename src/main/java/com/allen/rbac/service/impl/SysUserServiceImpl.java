@@ -12,7 +12,7 @@ import com.allen.rbac.service.SysUserService;
 import com.allen.rbac.util.BeanUtils;
 import com.allen.rbac.util.PageInfo;
 import com.allen.rbac.util.PageResult;
-import com.allen.rbac.util.ServiceAssert;
+import com.allen.rbac.exception.ServiceAssert;
 import org.apache.shiro.crypto.hash.Md5Hash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

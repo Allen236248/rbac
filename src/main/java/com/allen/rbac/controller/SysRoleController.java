@@ -8,7 +8,7 @@ import com.allen.rbac.service.SysRoleService;
 import com.allen.rbac.util.ApiResult;
 import com.allen.rbac.util.PageInfo;
 import com.allen.rbac.util.PageResult;
-import com.allen.rbac.util.ServiceException;
+import com.allen.rbac.exception.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

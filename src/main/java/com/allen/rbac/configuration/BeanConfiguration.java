@@ -1,10 +1,8 @@
 package com.allen.rbac.configuration;
 
+import com.allen.rbac.exception.CustomHandlerExceptionResolver;
 import com.allen.rbac.util.MybatisLogInterceptor;
 import com.allen.rbac.util.MybatisPaginationInterceptor;
-import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,5 +20,10 @@ public class BeanConfiguration {
                 configuration.addInterceptor(new MybatisPaginationInterceptor());
             }
         };
+    }
+
+    @Bean
+    public CustomHandlerExceptionResolver exceptionHandler(){
+        return new CustomHandlerExceptionResolver();
     }
 }

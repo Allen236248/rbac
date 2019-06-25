@@ -1,11 +1,10 @@
 package com.allen.rbac.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.allen.rbac.dto.SysPrivilegeDto;
 import com.allen.rbac.dto.SysUserDto;
 import com.allen.rbac.service.SysUserService;
 import com.allen.rbac.util.ApiResult;
-import com.allen.rbac.util.ServiceException;
+import com.allen.rbac.exception.ServiceException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -67,6 +66,14 @@ public class LoginController extends BaseController {
         ModelAndView mav = new ModelAndView("/login");
         //mav.addObject("msg", "请先登录");
         return mav;
+    }
+
+    @GetMapping("/logout")
+    public ApiResult<Void> logout() {
+        ApiResult<Void> apiResult = ApiResult.build();
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return apiResult;
     }
 
 }
