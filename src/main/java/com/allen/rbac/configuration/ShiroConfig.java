@@ -1,12 +1,17 @@
 package com.allen.rbac.configuration;
 
 import com.allen.rbac.shiro.CustomShiroRealm;
+import com.allen.rbac.shiro.RedisShiroCacheManager;
+import com.allen.rbac.shiro.RedisShiroSessionDao;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,15 +36,46 @@ public class ShiroConfig {
     public CustomShiroRealm customShiroRealm(HashedCredentialsMatcher hashedCredentialsMatcher) {
         CustomShiroRealm customShiroRealm = new CustomShiroRealm();
         customShiroRealm.setCredentialsMatcher(hashedCredentialsMatcher);
+        // 如果登陆认证需要使用缓存，则需要明确的设置允许使用缓存
+        // customShiroRealm.setAuthenticationCachingEnabled(true);
         return customShiroRealm;
     }
 
     @Bean
+    public SessionDAO sessionDAO() {
+        RedisShiroSessionDao sessionDao = new RedisShiroSessionDao();
+        return sessionDao;
+    }
+
+    @Bean
+    public DefaultWebSessionManager defaultWebSessionManager() {
+        DefaultWebSessionManager defaultWebSessionManager = new DefaultWebSessionManager();
+        //session超时时间为半小时
+        defaultWebSessionManager.setGlobalSessionTimeout(DefaultWebSessionManager.DEFAULT_GLOBAL_SESSION_TIMEOUT);
+        //defaultWebSessionManager.setSessionIdCookie();
+        defaultWebSessionManager.setSessionDAO(sessionDAO());
+        return defaultWebSessionManager;
+    }
+
+    @Bean
+    public CacheManager cacheManager() {
+        RedisShiroCacheManager cacheManager = new RedisShiroCacheManager();
+        return cacheManager;
+    }
+
+    /**
+     * SecurityManager设置缓存管理器后，会用于Authenticator、Authorizer、Session。
+     * 它们也可以独立设置，独立使用缓存优先级高
+     *
+     * @param customShiroRealm
+     * @return
+     */
+    @Bean
     public SecurityManager securityManager(CustomShiroRealm customShiroRealm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(customShiroRealm);
-        //securityManager.setSessionManager();
-        // securityManager.setCacheManager();
+        securityManager.setSessionManager(defaultWebSessionManager());
+        securityManager.setCacheManager(cacheManager());
         return securityManager;
     }
 
@@ -74,7 +110,7 @@ public class ShiroConfig {
     }
 
     @Bean
-    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor(){
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
     }
 

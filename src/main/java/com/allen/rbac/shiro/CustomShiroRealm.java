@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class CustomShiroRealm extends AuthorizingRealm {
             throw new AuthenticationException("用户名或密码错误");
         }
         ByteSource credentialsSalt = ByteSource.Util.bytes(username);
-        return new SimpleAuthenticationInfo(sysUserDto, sysUserDto.getPassword(), credentialsSalt, getName());
+        return new SimpleAuthenticationInfo(username, sysUserDto.getPassword(), credentialsSalt, getName());
     }
 
     /**
@@ -66,7 +67,12 @@ public class CustomShiroRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal) {
         LOGGER.info("请求授权");
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        SysUserDto sysUserDto = (SysUserDto) principal.getPrimaryPrincipal();
+        String username = (String) principal.getPrimaryPrincipal();
+        if(!StringUtils.hasText(username)) {
+            LOGGER.warn("请求授权-username为空");
+            return null;
+        }
+        SysUserDto sysUserDto = sysUserService.findByUsername(username);
         if(null == sysUserDto) {
             LOGGER.warn("请求授权-用户信息为空");
             return null;
