@@ -88,8 +88,11 @@ public class SysUserServiceImpl implements SysUserService {
         ServiceAssert.assertThat(!StringUtils.hasText(username), "用户名不能为空");
 
         SysUser sysUser = sysUserDao.findByUsername(username);
-        SysUserDto sysUserDto = BeanUtils.copyProperties(sysUser, SysUserDto.class);
-        sysUserDto.setRoleList(BeanUtils.copyProperties(sysUserDto.getRoleList(), SysRoleDto.class));
+        SysUserDto sysUserDto = null;
+        if(null != sysUser) {
+            sysUserDto = BeanUtils.copyProperties(sysUser, SysUserDto.class);
+            sysUserDto.setRoleList(BeanUtils.copyProperties(sysUserDto.getRoleList(), SysRoleDto.class));
+        }
         return sysUserDto;
     }
 

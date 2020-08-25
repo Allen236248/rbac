@@ -37,7 +37,7 @@ public class ShiroConfig {
         CustomShiroRealm customShiroRealm = new CustomShiroRealm();
         customShiroRealm.setCredentialsMatcher(hashedCredentialsMatcher);
         // 如果登陆认证需要使用缓存，则需要明确的设置允许使用缓存
-        // customShiroRealm.setAuthenticationCachingEnabled(true);
+        customShiroRealm.setAuthenticationCachingEnabled(true);
         return customShiroRealm;
     }
 
@@ -94,7 +94,8 @@ public class ShiroConfig {
         filterChainDefinitions.put("/to_logout", "logout");
 
         //登陆使用authc过滤器。authc表示认证（登陆）过滤器：需要认证才能访问
-        filterChainDefinitions.put("/to_login", "authc");
+        //如果当前url与loginUrl不同，请求此url将被redirect到loginUrl
+        filterChainDefinitions.put("/login", "authc");
 
         //过滤器链的定义是从上至下的顺序执行的，所以/**必须放到最下面。user过滤器（访问控制）：配置记住我或认证通过后才可以访问
         filterChainDefinitions.put("/**", "user");

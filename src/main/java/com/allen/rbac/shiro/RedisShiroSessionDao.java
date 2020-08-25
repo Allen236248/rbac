@@ -12,8 +12,10 @@ public class RedisShiroSessionDao extends CachingSessionDAO {
         Serializable sessionId = generateSessionId(session);
         assignSessionId(session, sessionId);
         RedisShiroCache cache = (RedisShiroCache) getActiveSessionsCache();
-        cache.setExpire(session.getTimeout());
-        cache(session, sessionId);
+        if(null != cache) {
+            cache.setExpire(session.getTimeout());
+            cache(session, sessionId);
+        }
         return sessionId;
     }
 
