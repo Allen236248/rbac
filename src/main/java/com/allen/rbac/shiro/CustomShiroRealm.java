@@ -5,6 +5,7 @@ import com.allen.rbac.dto.SysRoleDto;
 import com.allen.rbac.dto.SysUserDto;
 import com.allen.rbac.service.SysRoleService;
 import com.allen.rbac.service.SysUserService;
+import com.allen.rbac.util.ByteSourceUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -53,7 +54,7 @@ public class CustomShiroRealm extends AuthorizingRealm {
             LOGGER.info("进行身份认证-失败，根据用户名{}查询的用户信息为空", username);
             throw new AuthenticationException("用户名或密码错误");
         }
-        ByteSource credentialsSalt = ByteSource.Util.bytes(username);
+        ByteSource credentialsSalt = ByteSourceUtils.bytes(username);
         return new SimpleAuthenticationInfo(username, sysUserDto.getPassword(), credentialsSalt, getName());
     }
 
